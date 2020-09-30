@@ -1,0 +1,73 @@
+swagger: "2.0"
+info:
+  description: "This is a schema that should be conformed to for the Oddschecker Odds API unattended task."
+  version: "1.0.0"
+  title: "Oddschecker Odds API"
+tags:
+- name: "odds"
+  description: "Offer and return Odds"
+schemes:
+- "http"
+paths:
+  /odds:
+    post:
+      tags:
+      - "odds"
+      summary: "Offer odds for a bet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Odds that should be offered for a bet"
+        required: true
+        schema:
+          $ref: "#/definitions/Odds"
+      responses:
+        201:
+          description: "Odds have been created for bet"
+        400:
+          description: "Invalid format of Odds"
+  /odds/{betId}:
+    get:
+      tags:
+      - "odds"
+      summary: "Find Odds by Bet ID"
+      description: "Returns a list of odds for a given bet ID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "betId"
+        in: "path"
+        description: "ID of bet to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Odds are returned for bet ID"
+          schema:
+            $ref: "#/definitions/Bet"
+        400:
+          description: "Invalid Bet ID supplied"
+        404:
+          description: "Bet not found for given ID"
+definitions:
+  Odds:
+    type: "object"
+    properties:
+      betId:
+        type: "integer"
+        format: "int64"
+      userId:
+        type: "string"
+        description: "ID of user who is offering the odds"
+      odds:
+        type: "string"
+        example: "1/10"
+  Bet:
+    type: "array"
+    items:
+      $ref: '#/definitions/Odds'
